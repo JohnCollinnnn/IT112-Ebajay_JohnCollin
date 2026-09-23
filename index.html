@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectHub - Social Media</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #6c63ff;
+            --primary-dark: #5a52d5;
+            --secondary: #ff6584;
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --text: #1a1a2e;
+            --text-light: #666;
+            --border: #e0e0e0;
+            --online: #44b700;
+            --sidebar-width: 280px;
+            --right-width: 300px;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            z-index: 1000;
+        }
+
+        .nav-logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6c63ff, #ff6584);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            background: var(--bg);
+            border-radius: 25px;
+            padding: 8px 16px;
+            gap: 8px;
+            width: 280px;
+        }
+
+        .nav-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 14px;
+            width: 100%;
+            color: var(--text);
+        }
+
+        .nav-search span {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .nav-icon-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--secondary);
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .nav-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6c63ff, #ff6584);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* LAYOUT */
+        .main-layout {
+            display: flex;
+            margin-top: 60px;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* LEFT SIDEBAR */
+        .sidebar-left {
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 60px;
+            left: 0;
+            height: calc(100vh - 60px);
+            background: white;
+            padding: 20px 12px;
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(255,101,132,0.1));
+            color: var(--primary);
+        }
+
+        .sidebar-menu .icon {
+            font-size: 22px;
+            width: 28px;
+            text-align: center;
+        }
+
+        .sidebar-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .sidebar-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 12px;
+            margin-bottom: 10px;
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .friend-item:hover {
+            background: var(--bg);
+        }
+
+        .friend-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .friend-avatar .online-dot {
+            position: absolute;
+            bottom: 1px;
+            right: 1px;
+            width: 10px;
+            height: 10px;
+            background: var(--online);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .friend-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .friend-status {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* MAIN FEED */
+        .feed {
+            margin-left: var(--sidebar-width);
+            margin-right: var(--right-width);
+            padding: 20px;
+            flex: 1;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: calc(var(--sidebar-width) + 20px);
+            padding-right: calc(var(--right-width) + 20px);
+            width: 100%;
+        }
+
+        /* STORIES */
+        .stories-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+
+        .stories-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .story-card {
+            min-width: 110px;
+            height: 180px;
+            border-radius: 16px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+
+        .story-card:hover {
+            transform: scale(1.03);
+        }
+
+        .story-card .story-bg {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .story-card .story-avatar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .story-card .story-name {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .add-story-card {
+            min-width: 110px;
+            height: 180px;
+            border-radius: 16px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px dashed var(--border);
+            gap: 8px;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .add-story-card:hover {
+            border-color: var(--primary);
+            background: rgba(108,99,255,0.05);
+        }
+
+        .add-story-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6c63ff, #ff6584);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+        }
+
+        .add-story-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* CREATE POST */
+        .create-post {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .create-post-top {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .create-post-input {
+            flex: 1;
+            background: var(--bg);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 18px;
+            font-size: 14px;
+            color: var(--text-light);
+            cursor: pointer;
+            outline: none;
+            transition: background 0.2s;
+        }
+
+        .create-post-input:focus {
+            background: #e8e8f0;
+        }
+
+        .create-post-actions {
+            display: flex;
+            gap: 4px;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+        }
+
+        .post-action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: background 0.2s;
+        }
+
+        .post-action-btn:hover {
+            background: var(--bg);
+        }
+
+        .post-action-btn span:first-child {
+            font-size: 18px;
+        }
+
+        /* POST COMPOSER MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 520px;
+            max-width: 95vw;
+            padding: 24px;
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .modal-user-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .modal-user-privacy {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--bg);
+            border: none;
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .post-textarea {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 18px;
+            resize: none;
+            min-height: 120px;
+            color: var(--text);
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+        .post-textarea::placeholder {
+            color: #bbb;
+        }
+
+        .modal-emoji-picker {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 12px 0;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 10px;
+        }
+
+        .emoji-btn {
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            transition: transform 0.1s;
+        }
+
+        .emoji-btn:hover {
+            transform: scale(1.3);
+        }
+
+        .modal-add-to-post {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin: 12px 0;
+        }
+
+        .modal-add-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .modal-add-icons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .modal-add-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            transition: background 0.2s;
+        }
+
+        .modal-add-icon:hover {
+            background: var(--bg);
+        }
+
+        .submit-post-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #6c63ff, #ff6584);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .submit-post-btn:hover {
+            opacity: 0.9;
+        }
+
+        .submit-post-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* POST CARD */
+        .post-card {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            gap: 10px;
+        }
+
+        .post-user-info {
+            flex: 1;
+        }
+
+        .post-user-name {
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .post-user-name:hover {
+            text-decoration: underline;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .post-options {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .post-options:hover {
+            background: var(--bg);
+        }
+
+        .post-content {
+            padding: 0 16px 12px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .post-emoji-display {
+            font-size: 80px;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(108,99,255,0.05), rgba(255,101,132,0.05));
+        }
+
+        .post-stats {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .post-likes-count {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .like-emojis {
+            display: flex;
+        }
+
+        .like-emojis span {
+            font-size: 16px;
+            margin-right: -4px;
+        }
+
+        .post-comments-count {
+            cursor: pointer;
+        }
+
+        .post-comments-count:hover {
+            text-decoration: underline;
+        }
+
+        .post-actions {
+            display: flex;
+            padding: 4px 8px;
+        }
+
+        .post-action {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .post-action:hover {
+            background: var(--bg);
+        }
+
+        .post-action.liked {
+            color: #6c63ff;
+        }
+
+        .post-action span:first-child {
+            font-size: 20px;
+        }
+
+        /* REACTION PICKER */
+        .reaction-picker {
+            position: absolute;
+            background: white;
+            border-radius: 50px;
+            padding: 8px 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: none;
+            gap: 8px;
+            z-index: 100;
+            bottom: 45px;
+            left: 0;
+        }
+
+        .reaction-picker.show {
+            display: flex;
+            animation: popIn 0.2s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .reaction-btn {
+            font-size: 28px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            transition: transform 0.15s;
+            line-height: 1;
+        }
+
+        .reaction-btn:hover {
+            transform: scale(1.4) translateY(-4px);
+        }
+
+        .like-wrapper {
+            position: relative;
+        }
+
+        /* COMMENTS */
+        .comments-section {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            display: none;
+        }
+
+        .comments-section.show {
+            display: block;
+        }
+
+        .comment {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .comment-bubble {
+            background: var(--bg);
+            border-radius: 16px;
+            padding: 10px 14px;
+            flex: 1;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .comment-action {
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .comment-action:hover {
+            color: var(--primary);
+        }
+
+        .comment-input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .comment-input {
+            flex: 1;
+            background: var(--bg);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 16px;
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .comment-submit {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6c63ff, #ff6584);
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* RIGHT SIDEBAR */
+        .sidebar-right {
+            width: var(--right-width);
+            position: fixed;
+            top: 60px;
+            right: 0;
+            height: calc(100vh - 60px);
+            padding: 20px 16px;
+            overflow-y: auto;
+            border-left: 1px solid var(--border);
+            background: white;
+        }
+
+        .right-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: var(--text);
+        }
+
+        .suggestion-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .suggestion-info {
+            flex: 1;
+        }
+
+        .suggestion-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .suggestion-mutual {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .follow-btn {
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #6c63ff, #ff6584);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+
+        .follow-btn:hover {
+            opacity: 0.85;
+        }
+
+        .follow-btn.following {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .trending-section {
+            margin-top: 24px;
+        }
+
+        .trending-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .trending-item:last-child {
+            border-bottom: none;
+        }
+
+        .trending-tag {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .trending-count {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        /* NOTIFICATION PANEL */
+        .notif-panel {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            width: 360px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            z-index: 1500;
+            display: none;
+            overflow: hidden;
+            animation: slideDown 0.2s ease;
+        }
+
+        .notif-panel.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .notif-header {
+            padding: 16px 20px;
+            font-size: 18px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notif-mark-read {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .notif-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notif-item:hover {
+            background: var(--bg);
+        }
+
+        .notif-item.unread {
+            background: rgba(108,99,255,0.05);
+        }
+
+        .notif-icon {
+            font-size: 24px;
+        }
+
+        .notif-content {
+            flex: 1;
+        }
+
+        .notif-text {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .notif-text strong {
+            font-weight: 700;
+        }
+
+        .notif-time {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 3px;
+        }
+
+        .notif-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1a1a2e;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 3000;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* PROFILE HOVER CARD */
+        .profile-hover-card {
+            position: fixed;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            width: 300px;
+            z-index: 2000;
+            display: none;
+            overflow: hidden;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .profile-hover-card.show {
+            display: block;
+        }
+
+        .profile-card-cover {
+            height: 80px;
+            background: linear-gradient(135deg, #6c63ff, #ff6584);
+        }
+
+        .profile-card-body {
+            padding: 0 16px 16px;
+        }
+
+        .profile-card-avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            border: 4px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 22px;
+            margin-top: -34px;
+            margin-bottom: 8px;
+        }
+
+        .profile-card-name {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .profile-card-bio {
+            font-size: 13px;
+            color: var(--text-light);
+            margin: 4px 0 12px;
+        }
+
+        .profile-card-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .profile-stat {
+            text-align: center;
+        }
+
+        .profile-stat-num {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .profile-stat-label {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        .profile-card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .profile-card-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .profile-card-btn.primary {
+            background: linear-gradient(135deg, #6c63ff, #ff6584);
+            color: white;
+        }
+
+        .profile-card-btn.secondary {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* CHAT */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1500;
+        }
+
+        .chat-bubble {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6c63ff, #ff6584);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(108,99,255,0.4);
+            transition: transform 0.2s;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            display: none;
+            overflow: hidden;
+        }
+
+        .chat-window.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .chat-win-header {
+            background: linear-gradient(135deg, #6c63ff, #ff6584);
+            color: white;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-win-title {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .chat-win-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chat-contacts {
+            padding: 12px;
+            max-height: 340px;
+            overflow-y: auto;
+        }
+
+        .chat-contact {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .chat-contact:hover {
+            background: var(--bg);
+        }
+
+        .chat-contact-info {
+            flex: 1;
+        }
+
+        .chat-contact-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .chat-contact-msg {
+            font-size: 12px;
+            color: var(--text-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        .chat-contact-time {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        /* LOADING SPINNER */
+        .loading {
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* DARK MODE */
+        body.dark {
+            --bg: #18191a;
+            --card: #242526;
+            --text: #e4e6eb;
+            --text-light: #b0b3b8;
+            --border: #3a3b3c;
+        }
+
+        body.dark .navbar,
+        body.dark .sidebar-left,
+        body.dark .sidebar-right,
+        body.dark .create-post,
+        body.dark .post-card,
+        body.dark .notif-panel,
+        body.dark .chat-window,
+        body.dark .modal,
+        body.dark .profile-hover-card {
+            background: #242526;
+        }
+
+        body.dark .nav-search,
+        body.dark .create-post-input,
+        body.dark .comment-input,
+        body.dark .comment-bubble,
+        body.dark .modal-emoji-picker {
+            background: #3a3b3c;
+            color: var(--text);
+        }
+
+        body.dark .nav-icon-btn,
+        body.dark .post-options,
+        body.dark .post-action,
+        body.dark .post-action-btn {
+            color: var(--text);
+        }
+
+        body.dark .nav-icon-btn:hover {
+            background: #3a3b3c;
+        }
+
+        body.dark .add-story-card {
+            background: #242526;
+            border-color: #3a3b3c;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1100px) {
+            .sidebar-right { display: none; }
+            .feed {
+                padding-right: 20px;
+                margin-right: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-left { display: none; }
+            .feed {
+                padding-left: 20px;
+            }
+            .nav-search { display: none; }
+        }
+
+        /* SCROLL BAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-logo">ConnectHub</div>
+    <div class="nav-search">
+        <span>🔍</span>
+        <input type="text" placeholder="Search ConnectHub..." id="searchInput" oninput="handleSearch(this.value)">
+    </div>
+    <div class="nav-icons">
+        <button class="nav-icon-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
+        <button class="nav-icon-btn" onclick="toggleNotifPanel()">
+            🔔
+            <span class="badge" id="notifBadge">3</span>
+        </button>
+        <button class="nav-icon-btn" onclick="showToast('💬 Messages coming soon!')">💬</button>
+        <div class="nav-avatar" onclick="showToast('👤 Profile page coming soon!')">JD</div>
+    </div>
+</nav>
+
+<!-- LEFT SIDEBAR -->
+<aside class="sidebar-left">
+    <ul class="sidebar-menu">
+        <li><a class="active" onclick="setActiveMenu(this)"><span class="icon">🏠</span> Home</a></li>
+        <li><a onclick="setActiveMenu(this)"><span class="icon">👤</span> Profile</a></li>
+        <li><a onclick="setActiveMenu(this)"><span class="icon">👥</span> Friends</a></li>
+        <li><a onclick="setActiveMenu(this)"><span class="icon">🎮</span> Gaming</a></li>
+        <li><a onclick="setActiveMenu(this)"><span class="icon">🛒</span> Marketplace</a></li>
+        <li><a onclick="setActiveMenu(this)"><span class="icon">📺</span> Watch</a></li>
+        <li><a onclick="setActiveMenu(this)"><span class="icon">📅</span> Events</a></li>
+        <li><a onclick="setActiveMenu(this)"><span class="icon">💾</span> Saved</a></li>
+        <li><a onclick="setActiveMenu(this)"><span class="icon">📄</span> Pages</a></li>
+    </ul>
+
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">Online Friends</div>
+        <div id="friendsList"></div>
+    </div>
+</aside>
+
+<!-- MAIN FEED -->
+<main class="feed">
+
+    <!-- STORIES -->
+    <div class="stories-container" id="storiesContainer"></div>
+
+    <!-- CREATE POST -->
+    <div class="create-post">
+        <div class="create-post-top">
+            <div class="nav-avatar">JD</div>
+            <input class="create-post-input" type="text" placeholder="What's on your mind, John?" readonly onclick="openPostModal()">
+        </div>
+        <div class="create-post-actions">
+            <button class="post-action-btn" onclick="openPostModal('📷')"><span>📷</span> Photo/Video</button>
+            <button class="post-action-btn" onclick="openPostModal('😊')"><span>😊</span> Feeling</button>
+            <button class="post-action-btn" onclick="openPostModal('📍')"><span>📍</span> Check in</button>
+        </div>
+    </div>
+
+    <!-- POSTS FEED -->
+    <div id="postsFeed"></div>
+
+    <!-- LOAD MORE -->
+    <div class="loading" id="loadingSpinner" style="display:none">
+        <div class="spinner"></div>
+    </div>
+
+</main>
+
+<!-- RIGHT SIDEBAR -->
+<aside class="sidebar-right">
+    <div class="right-section-title">People You May Know</div>
+    <div id="suggestionsList"></div>
+
+    <div class="trending-section">
+        <div class="right-section-title">🔥 Trending</div>
+        <div id="trendingList"></div>
+    </div>
+</aside>
+
+<!-- POST COMPOSER MODAL -->
+<div class="modal-overlay" id="postModal" onclick="closeModalOutside(event)">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">Create Post</div>
+            <button class="modal-close" onclick="closePostModal()">✕</button>
+        </div>
+        <div class="modal-user">
+            <div class="nav-avatar">JD</div>
+            <div>
+                <div class="modal-user-name">John Doe</div>
+                <button class="modal-user-privacy">🌍 Public ▾</button>
+            </div>
+        </div>
+        <textarea class="post-textarea" id="postTextarea" placeholder="What's on your mind?" oninput="updatePostBtn()"></textarea>
+        <div class="modal-emoji-picker">
+            <button class="emoji-btn" onclick="addEmoji('😀')">😀</button>
+            <button class="emoji-btn" onclick="addEmoji('😂')">😂</button>
+            <button class="emoji-btn" onclick="addEmoji('❤️')">❤️</button>
+            <button class="emoji-btn" onclick="addEmoji('🔥')">🔥</button>
+            <button class="emoji-btn" onclick="addEmoji('👍')">👍</button>
+            <button class="emoji-btn" onclick="addEmoji('🎉')">🎉</button>
+            <button class="emoji-btn" onclick="addEmoji('😍')">😍</button>
+            <button class="emoji-btn" onclick="addEmoji('🙏')">🙏</button>
+            <button class="emoji-btn" onclick="addEmoji('💯')">💯</button>
+            <button class="emoji-btn" onclick="addEmoji('✨')">✨</button>
+            <button class="emoji-btn" onclick="addEmoji('😎')">😎</button>
+            <button class="emoji-btn" onclick="addEmoji('🌟')">🌟</button>
+        </div>
+        <div class="modal-add-to-post">
+            <span class="modal-add-label">Add to your post</span>
+            <div class="modal-add-icons">
+                <button class="modal-add-icon" title="Photo">📷</button>
+                <button class="modal-add-icon" title="Tag">🏷️</button>
+                <button class="modal-add-icon" title="Location">📍</button>
+                <button class="modal-add-icon" title="Feeling">😊</button>
+            </div>
+        </div>
+        <button class="submit-post-btn" id="submitPostBtn" onclick="submitPost()" disabled>Post</button>
+    </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <span>Notifications</span>
+        <span class="notif-mark-read" onclick="markAllRead()">Mark all as read</span>
+    </div>
+    <div id="notifList"></div>
+</div>
+
+<!-- PROFILE HOVER CARD -->
+<div class="profile-hover-card" id="profileCard"></div>
+
+<!-- CHAT WIDGET -->
+<div class="chat-widget">
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-win-header">
+            <span class="chat-win-title">💬 Messages</span>
+            <button class="chat-win-close" onclick="toggleChat()">✕</button>
+        </div>
+        <div class="chat-contacts" id="chatContacts"></div>
+    </div>
+    <div class="chat-bubble" onclick="toggleChat()">💬</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // ==================== DATA ====================
+    const currentUser = { name: 'John Doe', initials: 'JD', color: '#6c63ff' };
+
+    const users = [
+        { id: 1, name: 'Sarah Johnson', initials: 'SJ', color: '#ff6584', bio: 'Designer & dreamer 🎨', followers: 1243, following: 892, posts: 87 },
+        { id: 2, name: 'Mike Chen', initials: 'MC', color: '#43c6ac', bio: 'Full-stack developer 💻', followers: 3421, following: 543, posts: 156 },
+        { id: 3, name: 'Emma Wilson', initials: 'EW', color: '#f7971e', bio: 'Travel photographer 📸', followers: 8932, following: 234, posts: 412 },
+        { id: 4, name: 'Alex Rivera', initials: 'AR', color: '#a18cd1', bio: 'Music producer 🎵', followers: 2103, following: 678, posts: 93 },
+        { id: 5, name: 'Lisa Park', initials: 'LP', color: '#f953c6', bio: 'Foodie & chef 🍕', followers: 5621, following: 1023, posts: 234 },
+        { id: 6, name: 'David Kim', initials: 'DK', color: '#4facfe', bio: 'Entrepreneur 🚀', followers: 12034, following: 456, posts: 321 },
+    ];
+
+    const postTemplates = [
+        { userId: 0, text: "Just launched my new project! 🚀 Six months of hard work finally paid off. So grateful for everyone who supported me along the way. Check it out and let me know what you think!", time: '2 min ago', emoji: '🚀' },
+        { userId: 1, text: "Beautiful sunset from my balcony tonight 🌅 Sometimes you just need to stop and appreciate the little things in life. #blessed #grateful", time: '15 min ago', emoji: '🌅' },
+        { userId: 2, text: "Just hit 10K followers! 🎉 Thank you all so much for the love and support. This community is absolutely amazing. Here's to many more milestones together!", time: '1 hr ago', emoji: '🎉' },
+        { userId: 3, text: "Working on a new track 🎵 Can't wait to share it with you all. The vibe is something completely different from what I've done before. Stay tuned!", time: '2 hrs ago', emoji: '🎵' },
+        { userId: 4, text: "Made homemade pasta for the first time and I'm OBSESSED 🍝 Recipe in the comments! It's way easier than you think and absolutely delicious.", time: '3 hrs ago', emoji: '🍝' },
+        { userId: 5, text: "Reminder: It's okay to take a break 🧘 Mental health matters. Take care of yourself first. The work will always be there, but your wellbeing is irreplaceable.", time: '5 hrs ago', emoji: '🧘' },
+    ];
+
+    const comments = [
+        "This is absolutely amazing! 🔥",
+        "Love this so much! ❤️",
+        "Congratulations! 🎉",
+        "This made my day! 😊",
+        "Can't wait to see more! 👀",
+        "You're such an inspiration! ✨",
+        "This is exactly what I needed today 🙌",
+        "Wow, incredible! 😍",
+    ];
+
+    const notifications = [
+        { id: 1, icon: '❤️', text: '<strong>Sarah Johnson</strong> liked your post', time: '2 min ago', unread: true },
+        { id: 2, icon: '💬', text: '<strong>Mike Chen</strong> commented: "This is amazing!"', time: '15 min ago', unread: true },
+        { id: 3, icon: '👥', text: '<strong>Emma Wilson</strong> sent you a friend request', time: '1 hr ago', unread: true },
+        { id: 4, icon: '🎉', text: '<strong>Alex Rivera</strong> mentioned you in a post', time: '3 hrs ago', unread: false },
+        { id: 5, icon: '🔥', text: 'Your post is trending! 50+ reactions', time: '5 hrs ago', unread: false },
+    ];
+
+    const trending = [
+        { tag: '#WebDevelopment', count: '24.3K posts' },
+        { tag: '#TechNews', count: '18.7K posts' },
+        { tag: '#Photography', count: '15.2K posts' },
+        { tag: '#Travel', count: '12.8K posts' },
+        { tag: '#FoodLovers', count: '9.4K posts' },
+    ];
+
+    // ==================== STATE ====================
+    let posts = [];
+    let darkMode = false;
+    let notifPanelOpen = false;
+    let chatOpen = false;
+
+    // ==================== INIT ====================
+    function init() {
+        renderStories();
+        renderPosts();
+        renderFriends();
+        renderSuggestions();
+        renderTrending();
+        renderNotifications();
+        renderChat();
+        setupInfiniteScroll();
+    }
+
+    // ==================== STORIES ====================
+    function renderStories() {
+        const container = document.getElementById('storiesContainer');
+        const gradients = [
+            'linear-gradient(135deg, #6c63ff, #ff6584)',
+            'linear-gradient(135deg, #43c6ac, #191654)',
+            'linear-gradient(135deg, #f7971e, #ffd200)',
+            'linear-gradient(135deg, #a18cd1, #fbc2eb)',
+            'linear-gradient(135deg, #4facfe, #00f2fe)',
+            'linear-gradient(135deg, #f953c6, #b91d73)',
+        ];
+
+        let html = `
+            <div class="add-story-card" onclick="showToast('📸 Story creator opening...')">
+                <div class="add-story-icon">+</div>
+                <div class="add-story-text">Add Story</div>
+            </div>
+        `;
+
+        users.forEach((user, i) => {
+            html += `
+                <div class="story-card" onclick="viewStory('${user.name}')">
+                    <div class="story-bg" style="background: ${gradients[i]}">
+                        <span style="font-size:50px">${['🌅','🎵','🌿','🔥','🎨','✈️'][i]}</span>
+                    </div>
+                    <div class="story-avatar" style="background: ${user.color}">${user.initials}</div>
+                    <div class="story-name">${user.name.split(' ')[0]}</div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    function viewStory(name) {
+        showToast(`📖 Viewing ${name}'s story...`);
+    }
+
+    // ==================== POSTS ====================
+    function renderPosts() {
+        const feed = document.getElementById('postsFeed');
+        feed.innerHTML = '';
+        posts = [];
+
+        postTemplates.forEach((template, i) => {
+            const user = users[template.userId || i % users.length];
+            const post = createPost(user, template.text, template.time, template.emoji);
+            posts.push(post);
+            feed.appendChild(createPostElement(post));
+        });
+    }
+
+    function createPost(user, text, time, emoji) {
+        return {
+            id: Date.now() + Math.random(),
+            user,
+            text,
+            time,
+            emoji,
+            likes: Math.floor(Math.random() * 200) + 10,
+            liked: false,
+            reaction: null,
+            comments: [],
+            shares: Math.floor(Math.random() * 30),
+            showComments: false,
+        };
+    }
+
+    function createPostElement(post) {
+        const div = document.createElement('div');
+        div.className = 'post-card';
+        div.id = `post-${post.id}`;
+        div.innerHTML = getPostHTML(post);
+        return div;
+    }
+
+    function getPostHTML(post) {
+        const reactionEmojis = { '❤️': '❤️', '😂': '😂', '😮': '😮', '😢': '😢', '😡': '😡', '👍': '👍' };
+        const likeLabel = post.reaction ? `${post.reaction} ${post.reaction === '👍' ? 'Like' : post.reaction === '❤️' ? 'Love' : post.reaction === '😂' ? 'Haha' : post.reaction === '😮' ? 'Wow' : post.reaction === '😢' ? 'Sad' : 'Angry'}` : '👍 Like';
+
+        return `
+            <div class="post-header">
+                <div class="friend-avatar" style="background: ${post.user.color}; width:44px; height:44px; font-size:15px;" 
+                     onmouseenter="showProfileCard(event, ${post.user.id})" 
+                     onmouseleave="hideProfileCard()">
+                    ${post.user.initials}
+                </div>
+                <div class="post-user-info">
+                    <div class="post-user-name" onmouseenter="showProfileCard(event, ${post.user.id})" onmouseleave="hideProfileCard()">${post.user.name}</div>
+                    <div class="post-meta">${post.time} · 🌍</div>
+                </div>
+                <button class="post-options" onclick="showPostOptions(event, ${JSON.stringify(post.id)})">⋯</button>
+            </div>
+            <div class="post-content">${post.text}</div>
+            ${post.emoji ? `<div class="post-emoji-display">${post.emoji}</div>` : ''}
+            <div class="post-stats">
+                <div class="post-likes-count" onclick="showReactors('${post.id}')">
+                    <div class="like-emojis">
+                        <span>❤️</span><span>👍</span><span>😂</span>
+                    </div>
+                    <span>${post.likes + (post.liked ? 1 : 0)}</span>
+                </div>
+                <div>
+                    <span class="post-comments-count" onclick="toggleComments('${post.id}')">${post.comments.length} comments</span>
+                    · ${post.shares} shares
+                </div>
+            </div>
+            <div class="post-actions">
+                <div class="like-wrapper">
+                    <button class="post-action ${post.liked ? 'liked' : ''}" 
+                            onclick="quickLike('${post.id}')"
+                            onmouseenter="showReactionPicker('${post.id}')"
+                            onmouseleave="scheduleHideReaction('${post.id}')">
+                        <span>${post.reaction || '👍'}</span> ${likeLabel}
+                    </button>
+                    <div class="reaction-picker" id="rp-${post.id}" 
+                         onmouseenter="cancelHideReaction('${post.id}')"
+                         onmouseleave="scheduleHideReaction('${post.id}')">
+                        ${Object.keys(reactionEmojis).map(e => 
+                            `<button class="reaction-btn" onclick="reactToPost('${post.id}', '${e}')" title="${e}">${e}</button>`
+                        ).join('')}
+                    </div>
+                </div>
+                <button class="post-action" onclick="toggleComments('${post.id}')"><span>💬</span> Comment</button>
+                <button class="post-action" onclick="sharePost('${post.id}')"><span>↪️</span> Share</button>
+            </div>
+            <div class="comments-section ${post.showComments ? 'show' : ''}" id="comments-${post.id}">
+                <div id="comment-list-${post.id}">
+                    ${post.comments.map(c => getCommentHTML(c)).join('')}
+                </div>
+                <div class="comment-input-row">
+                    <div class="nav-avatar" style="width:32px;height:32px;font-size:11px;flex-shrink:0">JD</div>
+                    <input class="comment-input" placeholder="Write a comment..." 
+                           id="ci-${post.id}"
+                           onkeydown="if(event.key==='Enter')addComment('${post.id}')">
+                    <button class="comment-submit" onclick="addComment('${post.id}')">➤</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function getCommentHTML(comment) {
+        return `
+            <div class="comment">
+                <div class="friend-avatar" style="background: ${comment.color}; width:32px; height:32px; font-size:11px; flex-shrink:0;">${comment.initials}</div>
+                <div>
+                    <div class="comment-bubble">
+                        <div class="comment-author">${comment.author}</div>
+                        <div class="comment-text">${comment.text}</div>
+                    </div>
+                    <div class="comment-actions">
+                        <span class="comment-action" onclick="showToast('👍 Liked!')">Like</span>
+                        <span class="comment-action" onclick="showToast('💬 Reply...')">Reply</span>
+                        <span style="color: var(--text-light)">${comment.time}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function refreshPost(postId) {
+        const post = posts.find(p => p.id == postId);
+        if (!post) return;
+        const el = document.getElementById(`post-${post.id}`);
+        if (el) {
+            el.innerHTML = getPostHTML(post);
+        }
+    }
+
+    // ==================== REACTIONS ====================
+    let reactionTimers = {};
+
+    function showReactionPicker(postId) {
+        clearTimeout(reactionTimers[postId]);
+        document.querySelectorAll('.reaction-picker').forEach(el => el.classList.remove('show'));
+        document.getElementById(`rp-${postId}`)?.classList.add('show');
+    }
+
+    function scheduleHideReaction(postId) {
+        reactionTimers[postId] = setTimeout(() => {
+            document.getElementById(`rp-${postId}`)?.classList.remove('show');
+        }, 300);
+    }
+
+    function cancelHideReaction(postId) {
+        clearTimeout(reactionTimers[postId]);
+    }
+
+    function reactToPost(postId, reaction) {
+        const post = posts.find(p => p.id == postId);
+        if (!post) return;
+        
+        if (post.reaction === reaction) {
+            post.liked = false;
+            post.reaction = null;
+            showToast('Reaction removed');
+        } else {
+            post.liked = true;
+            post.reaction = reaction;
+            showToast(`${reaction} Reacted!`);
+        }
+        
+        document.getElementById(`rp-${postId}`)?.classList.remove('show');
+        refreshPost(postId);
+    }
+
+    function quickLike(postId) {
+        const post = posts.find(p => p.id == postId);
+        if (!post) return;
+        
+        if (post.liked) {
+            post.liked = false;
+            post.reaction = null;
+        } else {
+            post.liked = true;
+            post.reaction = '👍';
+            showToast('👍 Liked!');
+        }
+        refreshPost(postId);
+    }
+
+    function showReactors(postId) {
+        showToast('👥 People who reacted...');
+    }
+
+    // ==================== COMMENTS ====================
+    function toggleComments(postId) {
+        const post = posts.find(p => p.id == postId);
+        if (!post) return;
+        post.showComments = !post.showComments;
+        const section = document.getElementById(`comments-${postId}`);
+        if (section) section.classList.toggle('show');
+        if (post.showComments) {
+            setTimeout(() => document.getElementById(`ci-${postId}`)?.focus(), 100);
+        }
+    }
+
+    function addComment(postId) {
+        const input = document.getElementById(`ci-${postId}`);
+        if (!input || !input.value.trim()) return;
+        
+        const post = posts.find(p => p.id == postId);
+        if (!post) return;
+
+        const comment = {
+            author: 'John Doe',
+            initials: 'JD',
+            color: '#6c63ff',
+            text: input.value.trim(),
+            time: 'Just now',
+        };
+
+        post.comments.push(comment);
+        input.value = '';
+
+        const commentList = document.getElementById(`comment-list-${postId}`);
+        if (commentList) {
+            const div = document.createElement('div');
+            div.innerHTML = getCommentHTML(comment);
+            commentList.appendChild(div.firstElementChild);
+        }
+
+        // Update comment count
+        refreshPost(postId);
+        post.showComments = true;
+        setTimeout(() => {
+            const section = document.getElementById(`comments-${postId}`);
+            if (section) section.classList.add('show');
+        }, 10);
+    }
+
+    // ==================== SHARE ====================
+    function sharePost(postId) {
+        const post = posts.find(p => p.id == postId);
+        if (post) {
+            post.shares++;
+            showToast('↪️ Post shared to your timeline!');
+            refreshPost(postId);
+        }
+    }
+
+    // ==================== POST COMPOSER ====================
+    function openPostModal(type) {
+        document.getElementById('postModal').classList.add('active');
+        const ta = document.getElementById('postTextarea');
+        ta.focus();
+        if (type === '📷') ta.placeholder = "Share a photo or video...";
+        else if (type === '😊') ta.placeholder = "How are you feeling?";
+        else if (type === '📍') ta.placeholder = "Where are you?";
+        else ta.placeholder = "What's on your mind?";
+    }
+
+    function closePostModal() {
+        document.getElementById('postModal').classList.remove('active');
+        document.getElementById('postTextarea').value = '';
+        document.getElementById('submitPostBtn').disabled = true;
+    }
+
+    function closeModalOutside(e) {
+        if (e.target === document.getElementById('postModal')) closePostModal();
+    }
+
+    function updatePostBtn() {
+        const val = document.getElementById('postTextarea').value.trim();
+        document.getElementById('submitPostBtn').disabled = val.length === 0;
+    }
+
+    function addEmoji(emoji) {
+        const ta = document.getElementById('postTextarea');
+        ta.value += emoji;
+        ta.focus();
+        updatePostBtn();
+    }
+
+    function submitPost() {
+        const text = document.getElementById('postTextarea').value.trim();
+        if (!text) return;
+
+        const post = {
+            id: Date.now(),
+            user: { id: 0, name: 'John Doe', initials: 'JD', color: '#6c63ff' },
+            text,
+            time: 'Just now',
+            emoji: null,
+            likes: 0,
+            liked: false,
+            reaction: null,
+            comments: [],
+            shares: 0,
+            showComments: false,
+        };
+
+        posts.unshift(post);
+        const feed = document.getElementById('postsFeed');
+        const el = createPostElement(post);
+        feed.insertBefore(el, feed.firstChild);
+
+        closePostModal();
+        showToast('✅ Post published!');
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ==================== POST OPTIONS ====================
+    function showPostOptions(event, postId) {
+        event.stopPropagation();
+        showToast('📋 Options: Edit, Delete, Save, Report');
+    }
+
+    // ==================== FRIENDS ====================
+    function renderFriends() {
+        const list = document.getElementById('friendsList');
+        list.innerHTML = users.map(user => `
+            <div class="friend-item" onclick="openDirectMessage('${user.name}')">
+                <div class="friend-avatar" style="background: ${user.color}">
+                    ${user.initials}
+                    <span class="online-dot"></span>
+                </div>
+                <div>
+                    <div class="friend-name">${user.name}</div>
+                    <div class="friend-status">Active now</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function openDirectMessage(name) {
+        showToast(`💬 Opening chat with ${name}...`);
+    }
+
+    // ==================== SUGGESTIONS ====================
+    function renderSuggestions() {
+        const list = document.getElementById('suggestionsList');
+        list.innerHTML = users.slice(0, 4).map(user => `
+            <div class="suggestion-card">
+                <div class="friend-avatar" style="background: ${user.color}; width:44px; height:44px;">${user.initials}</div>
+                <div class="suggestion-info">
+                    <div class="suggestion-name">${user.name}</div>
+                    <div class="suggestion-mutual">👥 ${Math.floor(Math.random()*10)+2} mutual friends</div>
+                </div>
+                <button class="follow-btn" id="follow-${user.id}" onclick="toggleFollow(${user.id}, '${user.name}')">Follow</button>
+            </div>
+        `).join('');
+    }
+
+    function toggleFollow(userId, name) {
+        const btn = document.getElementById(`follow-${userId}`);
+        if (btn.classList.contains('following')) {
+            btn.classList.remove('following');
+            btn.textContent = 'Follow';
+            showToast(`Unfollowed ${name}`);
+        } else {
+            btn.classList.add('following');
+            btn.textContent = '✓ Following';
+            showToast(`✅ Now following ${name}!`);
+        }
+    }
+
+    // ==================== TRENDING ====================
+    function renderTrending() {
+        const list = document.getElementById('trendingList');
+        list.innerHTML = trending.map(t => `
+            <div class="trending-item" onclick="showToast('🔍 Searching ${t.tag}...')">
+                <div class="trending-tag">${t.tag}</div>
+                <div class="trending-count">${t.count}</div>
+            </div>
+        `).join('');
+    }
+
+    // ==================== NOTIFICATIONS ====================
+    function renderNotifications() {
+        const list = document.getElementById('notifList');
+        list.innerHTML = notifications.map(n => `
+            <div class="notif-item ${n.unread ? 'unread' : ''}" onclick="markRead(${n.id})">
+                <div class="notif-icon">${n.icon}</div>
+                <div class="notif-content">
+                    <div class="notif-text">${n.text}</div>
+                    <div class="notif-time">${n.time}</div>
+                </div>
+                ${n.unread ? '<div class="notif-dot"></div>' : ''}
+            </div>
+        `).join('');
+    }
+
+    function toggleNotifPanel() {
+        notifPanelOpen = !notifPanelOpen;
+        document.getElementById('notifPanel').classList.toggle('show', notifPanelOpen);
+    }
+
+    function markRead(id) {
+        const notif = notifications.find(n => n.id === id);
+        if (notif) notif.unread = false;
+        updateBadge();
+        renderNotifications();
+    }
+
+    function markAllRead() {
+        notifications.forEach(n => n.unread = false);
+        updateBadge();
+        renderNotifications();
+        showToast('✅ All notifications marked as read');
+    }
+
+    function updateBadge() {
+        const count = notifications.filter(n => n.unread).length;
+        const badge = document.getElementById('notifBadge');
+        badge.textContent = count;
+        badge.style.display = count ? 'flex' : 'none';
+    }
+
+    // ==================== PROFILE HOVER ====================
+    let profileCardTimer;
+
+    function showProfileCard(event, userId) {
+        clearTimeout(profileCardTimer);
+        const user = users.find(u => u.id === userId);
+        if (!user) return;
+
+        const card = document.getElementById('profileCard');
+        card.innerHTML = `
+            <div class="profile-card-cover"></div>
+            <div class="profile-card-body">
+                <div class="friend-avatar profile-card-avatar" style="background: ${user.color}">${user.initials}</div>
+                <div class="profile-card-name">${user.name}</div>
+                <div class="profile-card-bio">${user.bio}</div>
+                <div class="profile-card-stats">
+                    <div class="profile-stat"><div class="profile-stat-num">${user.posts}</div><div class="profile-stat-label">Posts</div></div>
+                    <div class="profile-stat"><div class="profile-stat-num">${user.followers.toLocaleString()}</div><div class="profile-stat-label">Followers</div></div>
+                    <div class="profile-stat"><div class="profile-stat-num">${user.following}</div><div class="profile-stat-label">Following</div></div>
+                </div>
+                <div class="profile-card-actions">
+                    <button class="profile-card-btn primary" onclick="showToast('👤 Viewing profile...')">View Profile</button>
+                    <button class="profile-card-btn secondary" onclick="showToast('💬 Opening chat...')">Message</button>
+                </div>
+            </div>
+        `;
+
+        const rect = event.target.getBoundingClientRect();
+        card.style.top = (rect.bottom + 8) + 'px';
+        card.style.left = Math.min(rect.left, window.innerWidth - 310) + 'px';
+        card.classList.add('show');
+    }
+
+    function hideProfileCard() {
+        profileCardTimer = setTimeout(() => {
+            document.getElementById('profileCard').classList.remove('show');
+        }, 300);
+    }
+
+    // ==================== CHAT ====================
+    function renderChat() {
+        const contacts = document.getElementById('chatContacts');
+        const lastMessages = [
+            "Hey! How are you? 😊",
+            "Did you see the game last night?",
+            "Can we schedule a call?",
+            "Thanks for the help! 🙏",
+            "Let's catch up soon!",
+        ];
+        contacts.innerHTML = users.slice(0,5).map((user, i) => `
+            <div class="chat-contact" onclick="showToast('💬 Opening chat with ${user.name}...')">
+                <div class="friend-avatar" style="background: ${user.color}; width:40px; height:40px;">
+                    ${user.initials}
+                    <span class="online-dot"></span>
+                </div>
+                <div class="chat-contact-info">
+                    <div class="chat-contact-name">${user.name}</div>
+                    <div class="chat-contact-msg">${lastMessages[i]}</div>
+                </div>
+                <div class="chat-contact-time">${['2m','15m','1h','3h','5h'][i]}</div>
+            </div>
+        `).join('');
+    }
+
+    function toggleChat() {
+        chatOpen = !chatOpen;
+        document.getElementById('chatWindow').classList.toggle('show', chatOpen);
+    }
+
+    // ==================== DARK MODE ====================
+    function toggleDarkMode() {
+        darkMode = !darkMode;
+        document.body.classList.toggle('dark', darkMode);
+        document.querySelector('.nav-icon-btn').textContent = darkMode ? '☀️' : '🌙';
+        showToast(darkMode ? '🌙 Dark mode enabled' : '☀️ Light mode enabled');
+    }
+
+    // ==================== SIDEBAR ====================
+    function setActiveMenu(el) {
+        document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    // ==================== SEARCH ====================
+    function handleSearch(val) {
+        if (val.length > 2) {
+            showToast(`🔍 Searching for "${val}"...`);
+        }
+    }
+
+    // ==================== INFINITE SCROLL ====================
+    function setupInfiniteScroll() {
+        window.addEventListener('scroll', () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+                loadMorePosts();
+            }
+        });
+    }
+
+    let loadingMore = false;
+    function loadMorePosts() {
+        if (loadingMore) return;
+        loadingMore = true;
+
+        const spinner = document.getElementById('loadingSpinner');
+        spinner.style.display = 'flex';
+
+        setTimeout(() => {
+            const feed = document.getElementById('postsFeed');
+            const randomUsers = [0, 1, 2, 3, 4, 5];
+            const randomTexts = [
+                "Just had the most amazing experience today! Life is full of surprises 🌟",
+                "Working from a coffee shop today ☕ Productivity through the roof!",
+                "New week, new goals! What are you all working on? 💪",
+                "Can't believe how fast this year is going by! 📅",
+                "Trying something new today. Wish me luck! 🤞",
+            ];
+
+            const idx = Math.floor(Math.random() * randomTexts.length);
+            const userIdx = Math.floor(Math.random() * users.length);
+            const post = createPost(users[userIdx], randomTexts[idx], 'Just now', ['🌟','☕','💪','📅','🤞'][idx]);
+            posts.push(post);
+            feed.appendChild(createPostElement(post));
+
+            spinner.style.display = 'none';
+            loadingMore = false;
+        }, 1200);
+    }
+
+    // ==================== TOAST ====================
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ==================== CLOSE PANELS ON OUTSIDE CLICK ====================
+    document.addEventListener('click', (e) => {
+        if (notifPanelOpen && !document.getElementById('notifPanel').contains(e.target) && 
+            !e.target.closest('.nav-icon-btn')) {
+            notifPanelOpen = false;
+            document.getElementById('notifPanel').classList.remove('show');
+        }
+    });
+
+    // ==================== START ====================
+    init();
+</script>
+</body>
+</html>
